@@ -15,7 +15,7 @@ typedef struct No
 
 }NoArvB, *raizArvB;
 
-//Função de busca
+//Função de busca para a chave
 /*
 * Utilizarei recursão:
 * - Parará quando achar;
@@ -39,8 +39,39 @@ int buscaArvB(raizArvB no, int busca)
 
     if (no.folha)
     {
-        printf("Valor nao encontrado");
+        printf("\nValor nao encontrado");
         return -1;
+    }
+
+    buscaArvB(no.filhos[i], busca);
+}
+
+//Função de busca para o nó (Inserção)
+/*
+* Utilizarei recursão:
+* - Parará quando achar;
+* - Parará quando chegar em uma folha e não encontrar.
+*/
+raizArvB buscaArvB(raizArvB no, int busca)
+{
+    int i;
+
+    for (i = 0; i < no.n; i++)
+    {
+        if (no.chave[i] == busca)
+        {
+            printf("\nElemento ja existe!");
+            return -1;
+        }
+
+        if (busca < no.chave[i])
+        {
+            if (no.folha)
+            {
+                return no;
+            }
+            buscarArvB(no.filhos[i], busca);
+        }
     }
 
     buscaArvB(no.filhos[i], busca);
