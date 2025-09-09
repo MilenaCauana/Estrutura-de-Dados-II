@@ -31,6 +31,8 @@ typedef struct
     ArvoreB noParaSubir;
 }RetornoInsere;
 
+//Função que inicializa a árvore
+
 //Função de busca sem busca Binária np vetor de chaves
 RetornoBusca buscaArvB(ArvoreB raiz, int chaveBusca)
 {
@@ -52,76 +54,131 @@ RetornoBusca buscaArvB(ArvoreB raiz, int chaveBusca)
 
     if (raiz -> ehFolha)
     {
-        return NULL;
+        RetornoBusca noNaoEncontrado;
+        noNaoEncontrado.indiceChave = -1;
+        noNaoEncontrado.noEncotrado = NULL;
+
+        printf("\nNao encontrado!");
+        return noNaoEncontrado;
     }
 
     return buscaArvB(raiz -> filho[i], chaveBusca);
 }
 
 //Função de busca com busca Binária np vetor de chaves
+/*ARRUMAR:
+* - meio = (inicio + fim) /2
+* - colocar recursão para ir para os outros nós
+*/
 RetornoBusca buscaArvBBuscaBinaria(ArvoreB raiz, int chaveBusca)
 {
-    int i = raiz -> numeroDeChaves/2;
-    int indiceMaximo = raiz -> numeroDeChaves;
-    int indiceMinimo = 0;
-
-    while (indiceMaximo != indiceMinimo)
+    if(raiz == NULL)
     {
-        if(chaveBusca == raiz -> chave[i])
+        printf("\nArvore vazia.");
+
+        RetornoBusca noNaoEncontrado;
+        noNaoEncontrado.indiceChave = -1;
+        noNaoEncontrado.noEncotrado = NULL;
+
+        printf("\nNao encontrado!");
+        return noNaoEncontrado;
+    }
+    //Irá parar a recursão se encontrar ou se for folha e não encontrar
+
+    //Buscando dentro do vetor
+    int inicio = 0;
+    int fim = raiz -> numeroDeChaves - 1;
+    int meio;
+
+    while (inicio <= fim)
+    {
+        meio = (inicio + fim) / 2;
+
+        if(chaveBusca == raiz -> chave[meio])
         {
             RetornoBusca noEncontrado;
-            noEncontrado.indiceChave = i;
+            noEncontrado.indiceChave = meio;
             noEncontrado.noEncotrado = raiz;
 
-            return (noEncontrado);
+            return noEncontrado;
         }
 
-        if(chaveBusca < raiz -> chave[i])
+        if(chaveBusca < raiz -> chave[meio])
         {
-            indiceMaximo = i;
-            i = (i - indiceMinimo) /2;
-        } else if(chaveBusca > raiz -> chave[i])
+            fim = meio - 1;
+        } else if(chaveBusca > raiz -> chave[meio])
         {
-            indiceMinimo = i;
-            i = ((indiceMaximo - i) / 2) + i;
+            inicio = meio + 1;
         }
     }
 
-    return NULL;
+    //Se for folha, acabou a busca e não achou
+    if(raiz -> ehFolha == 1)
+    {
+        RetornoBusca noNaoEncontrado;
+        noNaoEncontrado.indiceChave = -1;
+        noNaoEncontrado.noEncotrado = NULL;
+
+        printf("\nNao encontrado!");
+        return noNaoEncontrado;
+    }
+
+    //Agora, se ele chegou aqui, ele não encontrou no vetor e não é folha, ou seja, é para entrar na recursão
+    return buscaArvBBuscaBinaria(raiz -> filho[inicio], chaveBusca);
 }
 
 //Função SplitChildren
 void splitChildren (ArvoreB noPai, int indiceParaDivisao)
 {
+    int i;
     ArvoreB novoIrmao = (ArvoreB) malloc(sizeof(NoArvB));
+
+    if (novoIrmao == NULL)
+    {
+        printf("\nErro: falha na alocacao de memoria");
+        exit(1);
+    }
+
     ArvoreB noParaDivisao = noPai -> filho[indiceParaDivisao];
     novoIrmao -> ehFolha = noParaDivisao -> ehFolha;
+    novoIrmao -> numeroDeChaves = T - 1;
 
-    noIrmao -> numeroDeChaves = T - 1;
+    //Inicializando todos os ponteiros de filho[i]
+    for (i = 0; i < MAX + 1; i++)
+    {
+        novoIrmao -> filho[i] = NULL;
+    }
 
-    for (j = 0; j < T; j++)
+    //Inicializando as chaves com um valor seguro
+    for (i = 0; i < MAX; i++)
+    {
+        novoIrmao -> chave[i] = -1000;
+    }
+
+    //Colocando os valores do noParaDivisão para o nó irmão
+    for (int j = 0; j < T; j++)
     {
         novoIrmao -> chave[j] = noParaDivisao -> chave[T + j]; //Está passando os valores depois da mediana para o novo nó
     }
 
-    if (!noParaDivisão -> folha)
+    if (noParaDivisao -> ehFolha == 0)
     {
-        for (j = 0; j < T; j++)
+        for (int j = 0; j < T; j++)
         {
-            noIrmao -> filho[j] = noParaDivisao -> filho[T + j]; //Ou seja, se o nó que está passando pela divisão não for folha, seus filhos de T + 1 devem ser passado para o noIrmao
+            novoIrmao -> filho[j] = noParaDivisao -> filho[T + j]; //Ou seja, se o nó que está passando pela divisão não for folha, seus filhos de T + 1 devem ser passado para o noIrmao
         }
     }
 
     noParaDivisao -> numeroDeChaves = T - 1;
 
     //Alterando o nó pai
-    for (j = noPai -> numeroDeChaves + 1; j > indiceParaDivisao; j--)
+    for (int j = noPai -> numeroDeChaves + 1; j > indiceParaDivisao; j--)
     {
         noPai -> filho[j + 1] = noPai -> filho[j];
     }
-    noPai -> filho[i + 1] = noIrmao;
+    noPai -> filho[i + 1] = novoIrmao;
 
-    for (j = noPai -> numeroDeChaves; i > indiceParaDivisao - 1; j--)
+    for (int j = noPai -> numeroDeChaves; i > indiceParaDivisao - 1; j--)
     {
         noPai -> chave[j+1] = noPai -> chave[j];
     }
@@ -130,26 +187,44 @@ void splitChildren (ArvoreB noPai, int indiceParaDivisao)
     noPai -> numeroDeChaves = noPai -> numeroDeChaves + 1;
 }
 
-]
 //Função split para o Método Tradicional de Inserção, ele só serve para divir
 RetornoInsere splitInsercaoTradicional(ArvoreB noParaDivisao)
 {
     RetornoInsere chaveENovoNo;
-    chaveENovoNo -> noParaSubir = (ArvoreB) malloc(sizeof(NoArvB));
-    chaveENovoNo -> noParaSubir -> ehFolha = noParaDivisao -> ehFolha;
+    chaveENovoNo.noParaSubir = (ArvoreB) malloc(sizeof(NoArvB));
 
-    chaveENovoNo -> noParaSubir -> numeroDeChaves = T - 1;
-
-    for (j = 0; j < T - 1; j++)
+    if(chaveENovoNo.noParaSubir == NULL)
     {
-        chaveENovoNo -> noParaSubir -> chave[j] = noParaDivisao -> chave[T + j]; //Está passando os valores depois da mediana para o novo nó
+        printf("\nERRO: alocacao de memoria.");
+        exit(1);
     }
 
-    if (!noParaDivisão -> folha)
+    chaveENovoNo.noParaSubir -> ehFolha = noParaDivisao -> ehFolha;
+    chaveENovoNo.noParaSubir -> numeroDeChaves = T - 1;
+
+    //Inicializando todos os ponteiros de filho[i]
+    for (int i = 0; i < MAX + 1; i++)
     {
-        for (j = 0; j < T; j++)
+        chaveENovoNo.noParaSubir -> filho[i] = NULL;
+    }
+
+    //Inicializando as chaves com um valor seguro
+    for (int i = 0; i < MAX; i++)
+    {
+        chaveENovoNo.noParaSubir -> chave[i] = -1000;
+    }
+
+    //Copia as chaves à direita da mediana para o novo nó
+    for (int j = 0; j < T - 1; j++)
+    {
+        chaveENovoNo.noParaSubir -> chave[j] = noParaDivisao -> chave[T + j]; //Está passando os valores depois da mediana para o novo nó
+    }
+
+    if (noParaDivisao -> ehFolha == 0)
+    {
+        for (int j = 0; j < T; j++)
         {
-            chaveENovoNo -> noParaSubir -> filho[j] = noParaDivisao -> filho[T + j];//Ou seja, se o nó que está passando pela divisão não for folha, seus filhos de T + 1 devem ser passado para o noIrmao
+            chaveENovoNo.noParaSubir -> filho[j] = noParaDivisao -> filho[T + j];//Ou seja, se o nó que está passando pela divisão não for folha, seus filhos de T + 1 devem ser passado para o noIrmao
             noParaDivisao -> filho[T + j] = NULL;
         }
 
@@ -157,7 +232,71 @@ RetornoInsere splitInsercaoTradicional(ArvoreB noParaDivisao)
 
     noParaDivisao -> numeroDeChaves = T - 1;
 
-    chaveENovoNo ->chaveParaSubir = noParaDivisao -> chave[T - 1];
+    chaveENovoNo.chaveParaSubir = noParaDivisao -> chave[T - 1];
 
     return chaveENovoNo;
 }
+
+//Função principal que gerencia o processo de inserção tradicional
+ArvoreB insereTradicionalNaArvoreB (ArvoreB raiz, int chaveParaInserir)
+{
+    //Caso 1: a Árvore está vazia
+    if (raiz == NULL)
+    {
+        raiz = (ArvoreB) malloc(sizeof(NoArvB));
+
+        if(raiz == NULL)
+        {
+            printf("\nERRO: alocacao de memoria falhou.");
+        }
+
+        raiz -> ehFolha = 1;
+        raiz -> numeroDeChaves = 1;
+        raiz -> chave[0] = chaveParaInserir;
+
+        //Inicializando todos os nós filhos
+        for(int i = 0; i < MAX + 1; i++)
+        {
+            raiz -> filho[i] = NULL;
+        }
+
+        return raiz;
+    }
+
+    //Caso 2: a Árvore não está vazia, irei inicializar a inserção utilizando recursão para a busca, para que o split possa acontecer
+    RetornoInsere chaveENovoNo;
+    chaveENovoNo = Insere(raiz, chaveParaInserir);
+
+    if (chaveENovoNo.chaveParaSubir != -1000) //Ou seja, a raiz sofreu split
+    {
+        //Criando a nova raiz
+        ArvoreB novaRaiz;
+        novaRaiz = (ArvoreB) malloc(sizeof(NoArvB));
+
+        if (novaRaiz == NULL)
+        {
+            printf("ERRO: alocacao de memoria falhou.");
+            exit(1);
+        }
+
+        novaRaiz -> numeroDeChaves = 1;
+        novaRaiz -> ehFolha = 0;
+        novaRaiz -> chave[0] = chaveENovoNo.chaveParaSubir;
+
+        //Primeiro, inicializando todos os filhos como NULL
+        for (int i = 0; i < MAX + 1; i++)
+        {
+            novaRaiz -> filho[i] = NULL;
+        }
+
+        //Agora, passando os nós que ela deverá apontar
+        novaRaiz -> filho[0] = raiz;
+        novaRaiz -> filho[1] = chaveENovoNo.noParaSubir;
+
+        return novaRaiz;
+    }
+
+    return raiz;
+}
+
+
