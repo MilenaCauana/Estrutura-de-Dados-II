@@ -24,6 +24,13 @@ typedef struct
     ArvoreB noEncotrado;
 } RetornoBusca;
 
+//Criando uma estrutura que irá permitir retornar a chave que irá subir no Método Tradicional de Inserção e o ponteiro para o novo nó criado
+typedef struct
+{
+    int chaveParaSubir;
+    ArvoreB noParaSubir;
+}RetornoInsere;
+
 //Função de busca sem busca Binária np vetor de chaves
 RetornoBusca buscaArvB(ArvoreB raiz, int chaveBusca)
 {
@@ -121,4 +128,36 @@ void splitChildren (ArvoreB noPai, int indiceParaDivisao)
     noPai -> chave[i] = noParaDivisao -> chave[T];
 
     noPai -> numeroDeChaves = noPai -> numeroDeChaves + 1;
+}
+
+]
+//Função split para o Método Tradicional de Inserção, ele só serve para divir
+RetornoInsere splitInsercaoTradicional(ArvoreB noParaDivisao)
+{
+    RetornoInsere chaveENovoNo;
+    chaveENovoNo -> noParaSubir = (ArvoreB) malloc(sizeof(NoArvB));
+    chaveENovoNo -> noParaSubir -> ehFolha = noParaDivisao -> ehFolha;
+
+    chaveENovoNo -> noParaSubir -> numeroDeChaves = T - 1;
+
+    for (j = 0; j < T - 1; j++)
+    {
+        chaveENovoNo -> noParaSubir -> chave[j] = noParaDivisao -> chave[T + j]; //Está passando os valores depois da mediana para o novo nó
+    }
+
+    if (!noParaDivisão -> folha)
+    {
+        for (j = 0; j < T; j++)
+        {
+            chaveENovoNo -> noParaSubir -> filho[j] = noParaDivisao -> filho[T + j];//Ou seja, se o nó que está passando pela divisão não for folha, seus filhos de T + 1 devem ser passado para o noIrmao
+            noParaDivisao -> filho[T + j] = NULL;
+        }
+
+    }
+
+    noParaDivisao -> numeroDeChaves = T - 1;
+
+    chaveENovoNo ->chaveParaSubir = noParaDivisao -> chave[T - 1];
+
+    return chaveENovoNo;
 }
