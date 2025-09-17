@@ -1,8 +1,21 @@
 # depslib dependency file v1.0
-1757443925 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\main.c
+1758135905 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\main.c
 	<stdio.h>
 	<stdlib.h>
 	"avoreB.h"
 
-1758070509 c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\avoreb.h
+1758131098 c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\avoreb.h
+	"Produto.h"
+
+1758133972 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\produto.c
+	<stdlib.h>
+	<stdio.h>
+	"Produto.h"
+
+1758133049 c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\produto.h
+
+1758135882 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\arvoreb.c
+	<stdlib.h>
+	<stdio.h>
+	"avoreB.h"
 

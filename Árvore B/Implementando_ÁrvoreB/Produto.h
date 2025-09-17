@@ -9,8 +9,13 @@ typedef struct
     int estaDisponivel;
     int quantidade;
     char descricao[1000];
+    float valor;
 
 }Produto;
+
+
+// FUNÇÕES
+void imprimirProduto(Produto produto);
 
 #endif // PRODUTO_H
 

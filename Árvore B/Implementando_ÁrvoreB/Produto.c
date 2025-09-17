@@ -5,8 +5,8 @@
 
 void imprimirProduto(Produto produto)
 {
-    printf("\n\n --- %c ----", produto.nome);
-    printf("\nCódigo de Barras: %d", produto.codigoDeBarras);
+    printf("\n\n --- %s ----", produto.nome);
+    printf("\nCodigo de Barras: %d", produto.codigoDeBarras);
     printf("\nEsta Disponivel: ");
     if(produto.estaDisponivel)
     {
@@ -16,7 +16,7 @@ void imprimirProduto(Produto produto)
         printf("Nao");
     }
     printf("\nQuantidade: %d", produto.quantidade);
-    printf("\nDescricao: %c", produto.descricao);
+    printf("\nDescricao: %s", produto.descricao);
+    printf("\nValor: %.2f", produto.valor);
 }
 
-#include "Produto.h"

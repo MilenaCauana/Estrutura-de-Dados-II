@@ -5,7 +5,7 @@
 
 int main()
 {
-    int ordem, t, tFuncoes;
+    int ordem, t;
     ArvoreB produtos;
 
     printf("\n ...Inicializando Arvore...");
@@ -14,21 +14,27 @@ int main()
     //Verificando se foi inicializada direito
     if(produtos == NULL)
     {
-        printf("\nERRO: nao foi possivel inicializar a arvore!");
+        printf("\nArvore Inicializada!");
+    } else
+    {
+        printf("\nERRO: Nao foi possivel inicializar a arvore!");
         return -1;
     }
-    printf("\nArvore Inicializada!");
 
-    printf("Para comecarmos, diga o tamanho de cada no: ");
+    printf("\n\n\nPara comecarmos, diga o tamanho de cada no: ");
     scanf("%d", &ordem);
+    fflush(stdin);
 
     t = (ordem + 1)/2;
-    tFuncoes = t + 1;
 
     printf("\n--- ENTRANDO NO SISTEMA DA LOJA ---");
     printf("\nBem-vindo!");
 
     int x;
+    int codigoDeBarras;
+    RetornoBusca infoProdutoBusca;
+    Produto produto;
+
     do
     {
         printf("\n\nEscolha uma das opcoes: ");
@@ -36,116 +42,199 @@ int main()
         printf("\n2) Buscar produto especifico;");
         printf("\n3) Inserir produto;");
         printf("\n4) Remover produto;");
+        printf("\n5) Remover quantidade de produto;");
         printf("\n-1) SAIR;");
+        printf("\nOpcao: ");
 
         scanf("%d", &x);
-        fflush();
+        fflush(stdin);
 
         switch(x)
         {
             case 1:
+                if (produtos == NULL)
+                {
+                    printf("\nNao tem produtos!");
+                    break;
+                }
+
                 imprimirArvore(produtos);
                 break;
 
             case 2:
-                int codigoDeBarras;
-                RetornoBusca infoProdutoBusca;
+                if (produtos == NULL)
+                {
+                    printf("\nNao tem produtos!");
+                    break;
+                }
 
-                printf("\nCodigo de Barras: ")
+                printf("\nCodigo de Barras: ");
                 scanf("%d", &codigoDeBarras);
+                fflush(stdin);
 
                 infoProdutoBusca = buscaArvBBuscaBinaria(produtos, codigoDeBarras);
 
-                if(infoProdutoBusca.noEncotrado == NULL)
+                if(infoProdutoBusca.noEncontrado == NULL)
                 {
                     break;
                 }
 
-                imprimirProduto(infoProdutoBusca.noEncotrado -> chave[infoProdutoBusca.indiceChave]);
+                imprimirProduto(infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave]);
+                break;
 
             case 3:
-                Produto produto;
-                RetornoBusca infoProdutoBusca;
-
                 printf("\n\n --- ADICIONAR PRODUTO ---");
 
-                int y, codigoDeBarras;
+                int y = 0;
                 do
                 {
                     printf("\nO produto ja existe na loja?");
-                    printf("\n1) Sim.");
-                    printf("\n2) Nao.");
+                    printf("\n1) Sim (Adicionar ao estoque existente)");
+                    printf("\n2) Nao (Cadastrar novo produto)");
+                    printf("\nOpcao: ");
+                    scanf("%d", &y);
+                    fflush(stdin);
 
-                }while (y != 1 || y != 2)
+                    if(y != 1 && y != 2)
+                    {
+                        printf("\nOpcao Invalida, tente novamente.");
+                    }
+
+                }while (y != 1 && y != 2);
 
                 if (y == 1)
                 {
                     printf("\n\nADICIONAR PRODUTO EXISTENTE:");
 
+                    if (produtos == NULL)
+                    {
+                        printf("\nNao tem produtos!");
+                        printf("\nAdicione um novo produto.");
+                        break;
+                    }
+
                     printf("\nCodigo de Barras: ");
                     scanf("%d", &codigoDeBarras);
-                    fflush();
+                    fflush(stdin);
 
                     infoProdutoBusca = buscaArvBBuscaBinaria(produtos, codigoDeBarras);
 
-                    if(infoProdutoBusca.noEncotrado == NULL)
+                    if(infoProdutoBusca.noEncontrado == NULL)
                     {
                         printf("\nTente novamente!");
                         break;
                     }
 
-                    produto = infoProdutoBusca.noEncotrado -> chave[infoProdutoBusca.indiceChave];
-
+                    printf("\nProduto: %s", infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave].nome);
                     int quantidadeSomar;
                     printf("\nQuantidade do produto: ");
                     scanf("%d", &quantidadeSomar);
-                    fflush();
+                    fflush(stdin);
 
-                    produto.quantidade += quantidadeSomar;
+                    infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave].quantidade += quantidadeSomar;
 
                     printf("\n\nPRODUTO ADICIONADO COM SUCESSO!");
+
+                    imprimirProduto(infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave]);
+                    break;
                 }
 
-                if (x == 2)
+                if (y == 2)
                 {
+                    printf("\n\nCADASTRAR NOVO PRODUTO");
                     printf("\nNome do Produto: ");
                     scanf("%s", produto.nome);
+                    fflush(stdin);
 
                     printf("\nCodigo de Barras: ");
                     scanf("%d", &produto.codigoDeBarras);
-                    fflush();
+                    fflush(stdin);
+                    printf("\n");
 
                     produto.estaDisponivel = 1;
 
                     printf("Quantidade do Produto: ");
                     scanf("%d", &produto.quantidade);
-                    fflush();
+                    fflush(stdin);
 
                     printf("\nDescricao: ");
                     scanf("%s", produto.descricao);
+                    fflush(stdin);
 
-                    produtos = insereArvoreB(produtos, produto);
+                    printf("\nValor: ");
+                    scanf("%f", &produto.valor);
+                    fflush(stdin);
+
+                    produtos = InsereArvoreB(produtos, produto, t);
                 }
 
                 break;
 
             case 4:
                 printf("\n\nREMOVER PRODUTO");
+
+                if (produtos == NULL)
+                {
+                    printf("\nNao tem produtos!");
+                    break;
+                }
+
                 int codigoDeBarrasRemov;
 
                 printf("\nCodigo de Barras: ");
                 scanf("%d", &codigoDeBarrasRemov);
-                fflush();
+                fflush(stdin);
 
-                removeArvoreB(produtos, codigoDeBarrasRemov);
+                int foiRemovido = removeArvoreB(produtos, codigoDeBarrasRemov, t);
+                if(foiRemovido)
+                {
+                    printf("\nProduto removido com sucesso!");
+                } else
+                {
+                    printf("\nFalha ao remover produto.");
+                }
 
+                break;
+
+            case 5:
+                printf("\n\nREMOVER QUANTIDADE DE PRODUTO:");
+
+                if (produtos == NULL)
+                {
+                    printf("\nNao tem produtos!");
+                    break;
+                }
+
+                printf("\nCodigo de Barras: ");
+                scanf("%d", &codigoDeBarras);
+                fflush(stdin);
+
+                infoProdutoBusca = buscaArvBBuscaBinaria(produtos, codigoDeBarras);
+
+                if(infoProdutoBusca.noEncontrado == NULL)
+                {
+                    printf("\nTente novamente!");
+                    break;
+                }
+
+
+                int quantidadeSomar;
+                printf("\nQuantidade que será removida: ");
+                scanf("%d", &quantidadeSomar);
+                fflush(stdin);
+
+                infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave].quantidade -= quantidadeSomar;
+
+                printf("\n\nPRODUTO ADICIONADO COM SUCESSO!");
+
+                imprimirProduto(infoProdutoBusca.noEncontrado -> chave[infoProdutoBusca.indiceChave]);
                 break;
         }
 
     }while (x != -1);
 
-    printf("\nTchau!")
-    printf("\nFinalizando...");
+    printf("\nTchau!");
+    printf("\nFinalizando...\n");
     desfazArvore(produtos);
 
 return 0;

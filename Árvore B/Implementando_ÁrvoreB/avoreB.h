@@ -1,8 +1,5 @@
-#ifndef ARVOREB_H
-#define ARVOREB_H
-
-#define MAX 3
-#define T (MAX + 1)/2 //Aqui, estou definindo t, que será utilizado para fazer a conta do máximo e do mínimo de chaves que um nó deve ter
+#ifndef AVOREB_H
+#define AVOREB_H
 
 #include "Produto.h"
 
@@ -14,25 +11,28 @@ typedef struct No
     Produto *chave;
     struct No **filho;
 
-}NoArvB, *ArvoreB;
+} NoArvB, *ArvoreB;
 
-//Criando uma estrutura que irá me permitir retornar o nó e o índice na função de busca
+// Estrutura para o retorno da busca
 typedef struct
 {
     int indiceChave;
-    ArvoreB noEncotrado;
+    ArvoreB noEncontrado; // Corrigido 'noEncotrado' para 'noEncontrado'
 } RetornoBusca;
 
-//Criando uma estrutura que irá permitir retornar a chave que irá subir no Método Tradicional de Inserção e o ponteiro para o novo nó criado
-typedef struct
-{
-    int chaveParaSubir;
-    ArvoreB noParaSubir;
-}RetornoInsere;
-
-//Funções
+// Protótipos das Funções
 ArvoreB inicializaArvore();
 
 RetornoBusca buscaArvBBuscaBinaria(ArvoreB raiz, int chaveBusca);
 
-#endif // ARVOREB_H
+void imprimirArvore(ArvoreB no);
+
+ArvoreB InsereArvoreB(ArvoreB raiz, Produto produto, int t);
+
+ArvoreB criarNo(int t);
+
+int removeArvoreB(ArvoreB no, int chaveRemover, int t);
+
+void desfazArvore(ArvoreB raiz);
+
+#endif // AVOREB_H
