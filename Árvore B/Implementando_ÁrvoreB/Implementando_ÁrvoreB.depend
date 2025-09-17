@@ -1,5 +1,8 @@
 # depslib dependency file v1.0
-1584205420 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\main.c
+1757443925 source:c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\main.c
 	<stdio.h>
 	<stdlib.h>
+	"avoreB.h"
+
+1758070509 c:\users\milena\documents\aprendendo-github\estrutura-de-dados-ii\햞vore b\implementando_햞voreb\avoreb.h
 

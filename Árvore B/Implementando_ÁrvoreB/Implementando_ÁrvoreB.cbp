@@ -31,9 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Produto.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Produto.h" />
 		<Unit filename="arvoreB.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="avoreB.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
